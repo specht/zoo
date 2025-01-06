@@ -1,7 +1,3 @@
-// dart pub get
-// dart run dcdg | grep -v core > zoo.puml
-// dart run lib/zoo.dart
-
 import 'package:interact/interact.dart';
 import 'package:zoo/animal.dart';
 import 'package:zoo/terrestrial_animal.dart';
@@ -14,16 +10,24 @@ class ZooException implements Exception {
 class Zoo {
   Map<String, Animal> animals = {};
 
+  // Tier erstellen:
+  // - Spezies und Name abfragen
+  // - Tier instanziieren und speichern
   void createAnimal() {
+    // Hier müssen alle Tierklassen eingetragen werden,
+    // die erstellt werden können.
     List species_options = [
       Dog.new,
     ];
+    // Tierklassen in lesbare Namen umwandeln
     List<String> species_options_labels = species_options.map((x) {
       return x.runtimeType.toString().replaceAll('(dynamic) => ', '');
     }).toList();
+    // Spezies auswählen
     int species_choice =
         Select(prompt: "Choose a species:", options: species_options_labels)
             .interact();
+    // Name abfragen
     String name = Input(
       prompt: 'Please enter a name:',
       validator: (String x) {
@@ -36,10 +40,13 @@ class Zoo {
         }
       },
     ).interact();
+    // Tier erstellen und speichern
     Animal animal = species_options[species_choice](name);
     animals[name] = animal;
   }
 
+  // zeigt ein Auswahlmenü mit allen Tieren an, außer
+  // dem übergebenen, falls eines übergeben wurde.
   Animal chooseAnimalExcept(Animal? animal) {
     List<String> animal_names =
         animals.keys.where((e) => e != animal?.name).toList();
@@ -50,6 +57,7 @@ class Zoo {
     return animals[animal_names[index]]!;
   }
 
+  // Tier auswählen und Aktion ausführen
   void selectAnimal() {
     if (animals.isEmpty) {
       print("There are currently no animals.");
@@ -57,13 +65,13 @@ class Zoo {
     }
     Animal animal = chooseAnimalExcept(null);
     int choice = Select(prompt: "Choose a command:", options: [
-      'Status',               // 0
-      'Make a noise',         // 1
-      'Feed',                 // 2
-      'Exercise',             // 3
-      'Train',                // 4
-      'Chase another animal', // 5
-      'Eat another animal',   // 6
+      /* 0 */ 'Status',
+      /* 1 */ 'Make a noise',
+      /* 2 */ 'Feed',
+      /* 3 */ 'Exercise',
+      /* 4 */ 'Train',
+      /* 5 */ 'Chase another animal',
+      /* 6 */ 'Eat another animal',
     ]).interact();
     switch (choice) {
       case 0:
@@ -77,6 +85,8 @@ class Zoo {
     }
   }
 
+  // Hauptteil des Programms, zeigt ein Auswahlmenü an
+  // und führt die gewählte Aktion aus.
   void run() {
     print("Welcome to my zoo!");
     bool quit = false;
@@ -107,7 +117,7 @@ class Zoo {
         print(e.message);
       }
     }
-    print("Have a nice day!");
+    print("👋 Have a nice day!");
   }
 }
 
