@@ -1,0 +1,8 @@
+name: zoo
+
+environment:
+  sdk: '^3.6.0'
+
+dependencies:
+  interact:
+  dcdg:
